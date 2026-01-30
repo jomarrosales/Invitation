@@ -256,13 +256,15 @@
 
   </div>
   
-<!-- Background Music -->
-<audio id="bg-music" loop playsinline preload="auto" autoplay>
+
+<audio id="bg-music" loop playsinline preload="auto">
   <source src="birthday-happy-birthday-music-song-295823.mp3" type="audio/mpeg">
 </audio>
 
 <button id="music-toggle" type="button" aria-label="Toggle background music">
-  🔊 
+  🔊 Play Music
+</button>
+
 
 
   
@@ -272,43 +274,29 @@
   const btn = document.getElementById("music-toggle");
   const KEY = "bgMusicPlaying";
 
-  function setButton(isPlaying){
-    btn.textContent = isPlaying ? "🔇 Pause Music" : "🔊 Play Music";
-  }
-
-  function armUnmuteOnFirstGesture(){
-    const unmuteOnce = () => {
-      audio.muted = false;
-      document.removeEventListener("click", unmuteOnce);
-      document.removeEventListener("touchstart", unmuteOnce);
-    };
-    document.addEventListener("click", unmuteOnce, { once: true });
-    document.addEventListener("touchstart", unmuteOnce, { once: true });
-  }
-
-  async function startMutedAutoplay(){
-    try {
-      audio.muted = true;
-      await audio.play();
-      setButton(true);
-      localStorage.setItem(KEY, "true");
-      armUnmuteOnFirstGesture();
-      return true;
-    } catch (e) {
-      setButton(false);
-      return false;
-    }
+  function setButton() {
+    btn.textContent = audio.paused ? "🔊 Play Music" : "🔇 Pause Music";
   }
 
   window.addEventListener("load", async () => {
-    // Always attempt muted autoplay on first open
-    // If the user previously paused music, respect that preference.
-    const userPaused = localStorage.getItem(KEY) === "false";
-    if (!userPaused) {
-      await startMutedAutoplay();
-    } else {
-      setButton(false);
+    const shouldPlay = localStorage.getItem(KEY) === "true";
+    if (shouldPlay) {
+      try {
+        audio.muted = false;
+        await audio.play();
+      } catch (e) {
+        // fallback: try muted autoplay if needed
+        try {
+          audio.muted = true;
+          await audio.play();
+          // unmute on first gesture
+          const unmute = () => { audio.muted = false; };
+          document.addEventListener("click", unmute, { once: true });
+          document.addEventListener("touchstart", unmute, { once: true });
+        } catch (err) {}
+      }
     }
+    setButton();
   });
 
   btn.addEventListener("click", async () => {
@@ -317,15 +305,12 @@
         audio.muted = false;
         await audio.play();
         localStorage.setItem(KEY, "true");
-        setButton(true);
       } else {
         audio.pause();
         localStorage.setItem(KEY, "false");
-        setButton(false);
       }
-    } catch (e) {
-      console.log("Audio action blocked:", e);
-    }
+    } catch (e) {}
+    setButton();
   });
 </script>
 
