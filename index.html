@@ -9,11 +9,10 @@
 
   <style>
     :root{
-      --accent: #8b5a5a;
-      --muted: #6d5b5b;
-      --shadow: 0 16px 34px rgba(0,0,0,0.18);
+      --accent:#8b5a5a;
+      --muted:#6d5b5b;
+      --shadow:0 16px 34px rgba(0,0,0,0.18);
     }
-
     body{
       margin:0;
       min-height:100vh;
@@ -29,7 +28,6 @@
       background-position:center;
       background-repeat:no-repeat;
     }
-
     .card{
       width:min(760px, 96vw);
       border-radius:26px;
@@ -40,7 +38,6 @@
       text-align:center;
       border: 1px solid rgba(255,255,255,0.45);
     }
-
     .title{
       font-family:"Great Vibes", cursive;
       font-size: clamp(2.8rem, 7vw, 4.2rem);
@@ -48,7 +45,6 @@
       margin: 0 0 8px;
       font-weight: 400;
     }
-
     .subtitle{
       font-family:"Poppins", sans-serif;
       color: var(--muted);
@@ -57,15 +53,13 @@
       letter-spacing: .3px;
       line-height: 1.5;
     }
-
     .btn{
-      display:inline-block;
       border:none;
       cursor:pointer;
       font-family:"Poppins", sans-serif;
       font-weight:600;
-      border-radius: 999px;
-      padding: 14px 26px;
+      border-radius:999px;
+      padding:14px 26px;
       background: rgba(139, 90, 90, 0.92);
       color:#fff;
       box-shadow: 0 10px 18px rgba(0,0,0,0.12);
@@ -73,7 +67,6 @@
       font-size: 1rem;
     }
     .btn:hover{ transform: translateY(-1px); opacity:.96; }
-
     .note{
       margin-top:16px;
       font-family:"Poppins", sans-serif;
@@ -86,11 +79,13 @@
 
 <body>
   <div class="card">
-    <h1 class="title">Welcome to Andrea’s 50th Birthday</h1>
+    <h1 class="title">Andrea’s 50th</h1>
+    <p class="subtitle">
+      Tap the button below to open the invitation.<br>
+    </p>
 
-    <!-- Music starts AFTER click (browser allows sound) -->
     <audio id="bg-music" preload="auto">
-      <source src="birthday-happy-birthday-music-song-295823.mp3" type="audio/mpeg" />
+      <source src="birthday-happy-birthday-music-song-295823.mp3" type="audio/mpeg">
     </audio>
 
     <button class="btn" id="openInvitation">🎉 Open Invitation</button>
@@ -101,18 +96,18 @@
     const btn = document.getElementById("openInvitation");
 
     btn.addEventListener("click", async () => {
+      // Mark music ON for the next pages
+      localStorage.setItem("bgMusicPlaying", "true");
+
+      // Try to start music with sound (allowed because user clicked)
       try {
-        // User click allows audio to play with sound
         audio.muted = false;
         await audio.play();
       } catch (e) {
-        // If it fails, still proceed
+        // If blocked, still proceed
       }
 
-      // Tell next pages to autoplay music
-      localStorage.setItem("bgMusicPlaying", "true");
-
-      // Go to your invitation page
+      // Go to invitation page
       window.location.href = "welcome.html";
     });
   </script>
