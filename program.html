@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Program Highlights ✨</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --blush: #ead7d4;
+      --paper: rgba(255,255,255,0.70);
+      --text: #5a4a4a;
+      --accent: #8b5a5a;     /* heading color */
+      --shadow: 0 14px 30px rgba(0,0,0,0.15);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body{
+      margin: 0;
+      font-family: "Playfair Display", serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      /* Floral background pattern (your image) */
+      background:
+        linear-gradient(rgba(248,235,231,0.85), rgba(248,235,231,0.85)),
+        url("1000107107.jpg");
+      background-size: cover;
+      background-position: center;
+      padding: 24px;
+    }
+
+    /* Main card */
+    .card{
+      width: min(820px, 96vw);
+      background: var(--paper);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+      backdrop-filter: blur(3px);
+      border: 1px solid rgba(255,255,255,0.55);
+    }
+
+    /* Inner panel (like the blush “paper” in the sample) */
+    .panel{
+      margin: 22px;
+      border-radius: calc(var(--radius) - 6px);
+      background: rgba(234,215,212,0.68);
+      padding: 26px 22px 22px;
+      position: relative;
+    }
+
+    /* Title */
+    h1{
+      margin: 0 0 10px;
+      text-align: center;
+      font-family: "Great Vibes", cursive;
+      font-size: clamp(2.3rem, 5vw, 3.2rem);
+      color: var(--accent);
+      font-weight: 400;
+      letter-spacing: 0.5px;
+    }
+
+    /* Grid for 4 categories */
+    .grid{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px 34px;
+      margin-top: 10px;
+    }
+
+    .section{
+      text-align: center;
+      color: var(--text);
+      padding: 6px 8px;
+    }
+
+    .section h2{
+      margin: 4px 0 8px;
+      font-family: "Great Vibes", cursive;
+      font-size: 2.3rem;
+      font-weight: 400;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    ul{
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      line-height: 1.85;
+      font-size: 1.05rem;
+    }
+
+    /* Roses bottom section */
+    .roses{
+      margin-top: 18px;
+      text-align: center;
+      padding-top: 6px;
+    }
+    .roses h2{
+      margin: 6px 0 10px;
+      font-family: "Great Vibes", cursive;
+      font-size: 2.7rem;
+      font-weight: 400;
+      color: var(--accent);
+    }
+
+    /* Divider feel */
+    .divider{
+      width: 65%;
+      margin: 10px auto 0;
+      height: 1px;
+      background: rgba(139,90,90,0.25);
+      border-radius: 999px;
+    }
+
+    /* Back button */
+    .back-wrap{
+      text-align: center;
+      padding: 18px 22px 22px;
+    }
+
+    a.back{
+      display: inline-block;
+      text-decoration: none;
+      background: rgba(139,90,90,0.92);
+      color: #fff;
+      padding: 12px 26px;
+      border-radius: 999px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+    a.back:hover{
+      transform: translateY(-1px);
+      opacity: 0.95;
+    }
+
+    /* Mobile tweaks */
+    @media (max-width: 620px){
+      .grid{ grid-template-columns: 1fr; gap: 14px; }
+      .panel{ margin: 16px; padding: 20px 16px 16px; }
+      ul{ font-size: 1.02rem; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <div class="panel">
+      <h1>Program Highlights</h1>
+
+      <div class="grid">
+        <!-- Cakes -->
+        <section class="section">
+          <h2>Cakes</h2>
+          <ul>
+            <li>Ayen</li>
+            <li>Alex</li>
+            <li>Tita Yolly</li>
+            <li>Tita Waway</li>
+            <li>Tita Cle</li>
+          </ul>
+        </section>
+
+        <!-- Perfumes -->
+        <section class="section">
+          <h2>Perfumes</h2>
+          <ul>
+            <li>Jackelyn</li>
+            <li>Jhelyn</li>
+            <li>Jhane</li>
+            <li>Joy</li>
+            <li>Micha</li>
+          </ul>
+        </section>
+
+        <!-- Gifts -->
+        <section class="section">
+          <h2>Gifts</h2>
+          <ul>
+            <li>Genesis</li>
+            <li>Ate Mila</li>
+            <li>Ate Necy</li>
+            <li>Ate Wena</li>
+            <li>Ate Vane</li>
+          </ul>
+        </section>
+
+        <!-- Wishes -->
+        <section class="section">
+          <h2>Wishes</h2>
+          <ul>
+            <li>Tita Meng</li>
+            <li>Ate Helen</li>
+            <li>Ate Nery</li>
+            <li>Lanie</li>
+            <li>Ate Embang</li>
+          </ul>
+        </section>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Roses -->
+      <section class="roses">
+        <h2>Roses</h2>
+        <ul>
+          <li>Jerico</li>
+          <li>Kuya Rico</li>
+          <li>Hero</li>
+          <li>Jomar</li>
+          <li>Willy</li>
+        </ul>
+      </section>
+    </div>
+
+    <div class="back-wrap">
+      <a class="back" href="index.html">← Back to Invitation</a>
+    </div>
+  </div>
+</body>
+</html>
