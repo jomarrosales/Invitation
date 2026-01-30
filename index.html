@@ -3,20 +3,31 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Andrea’s 50th — Welcome</title>
+  <title>Andrea’s 50th Birthday 🎉</title>
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
 
   <style>
+    /* =============================
+       Theme
+    ============================== */
     :root{
       --accent:#8b5a5a;
       --muted:#6d5b5b;
       --shadow:0 16px 34px rgba(0,0,0,0.18);
+      --paper: rgba(255,255,255,0.55);
+      --panel: rgba(227,205,201,0.78);
+      --panel-border: rgba(255,255,255,0.55);
+      --radius: 26px;
     }
 
     * { box-sizing: border-box; }
 
+    /* =============================
+       Base background (invitation theme)
+       Welcome section uses its own background inside the card.
+    ============================== */
     body{
       margin:0;
       min-height:100vh;
@@ -26,37 +37,134 @@
       padding:24px;
       font-family:"Playfair Display", serif;
 
-      /* CLEAN floral background (soft overlay to reduce busy look) */
+      /* Invitation floral background (change if you want) */
+      background:url("background-image.png");
+      background-size:cover;
+      background-position:center;
+      background-repeat:no-repeat;
+    }
+
+    /* Optional soft vignette */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background: radial-gradient(circle at center, rgba(0,0,0,0.00), rgba(0,0,0,0.10));
+    }
+
+    /* =============================
+       Card + Panel
+    ============================== */
+    .card{
+      width:min(820px, 96vw);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      background: rgba(255,255,255,0.62);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border: 1px solid rgba(255,255,255,0.55);
+      overflow:hidden;
+      position: relative;
+      z-index: 1; /* above body vignette */
+    }
+
+    .panel{
+      margin: 22px;
+      border-radius: 22px;
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      padding: 34px 26px 26px;
+      text-align: center;
+    }
+
+    /* =============================
+       Single-page routing
+    ============================== */
+    .page { display:none; }
+    .page.active { display:block; }
+
+    /* =============================
+       Buttons
+    ============================== */
+    .btn{
+      display:inline-block;
+      border:none;
+      cursor:pointer;
+      text-decoration:none;
+      font-family:"Poppins", sans-serif;
+      font-weight:600;
+      border-radius:999px;
+      padding:14px 26px;
+      background: rgba(139, 90, 90, 0.92);
+      color:#fff;
+      box-shadow: 0 10px 18px rgba(0,0,0,0.12);
+      transition: transform .15s ease, opacity .15s ease;
+      font-size: 1rem;
+    }
+    .btn:hover{ transform: translateY(-1px); opacity:.96; }
+
+    .btn.secondary{
+      background: rgba(109, 91, 91, 0.85);
+    }
+
+    .btn-row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:center;
+      margin-top: 14px;
+    }
+
+    /* =============================
+       Music toggle button (fixed)
+    ============================== */
+    #music-toggle{
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 9999;
+      border:none;
+      cursor:pointer;
+      border-radius:999px;
+      padding:12px 16px;
+      font-family:"Poppins", sans-serif;
+      font-weight:600;
+      background: rgba(139, 90, 90, 0.92);
+      color:#fff;
+      box-shadow: 0 10px 18px rgba(0,0,0,0.15);
+    }
+    #music-toggle:hover{ opacity:.95; }
+
+    /* =============================
+       WELCOME section (your exact style)
+       We apply your background-image.png inside the section container.
+    ============================== */
+    .welcome-wrap{
+      border-radius: 22px;
+      padding: 36px 26px;
       background-image:
         radial-gradient(circle at top, rgba(255,255,255,0.65), rgba(248,235,231,0.92)),
         linear-gradient(rgba(248,235,231,0.70), rgba(248,235,231,0.70)),
         url("background-image.png");
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
+      background-size:cover;
+      background-position:center;
+      background-repeat:no-repeat;
+      position: relative;
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,0.55);
+      box-shadow: 0 12px 26px rgba(0,0,0,0.10);
     }
 
-    /* Optional soft vignette for extra cleanliness */
-    body::before{
+    .welcome-wrap::before{
       content:"";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
+      position:absolute;
+      inset:0;
+      pointer-events:none;
       background: radial-gradient(circle at center, rgba(0,0,0,0.00), rgba(0,0,0,0.10));
     }
 
-    .card{
-      width:min(760px, 96vw);
-      border-radius:26px;
-      background: rgba(255,255,255,0.62);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      box-shadow: var(--shadow);
-      padding:36px 26px;
-      text-align:center;
-      border: 1px solid rgba(255,255,255,0.55);
-      position: relative;
-    }
+    .welcome-content{ position: relative; }
 
     .title{
       font-family:"Great Vibes", cursive;
@@ -75,66 +183,456 @@
       line-height: 1.5;
     }
 
-    .btn{
-      border:none;
-      cursor:pointer;
+    /* =============================
+       Invitation styles (from your single-page)
+    ============================== */
+    .fifty{
+      font-family: "Great Vibes", cursive;
+      font-size: clamp(3.2rem, 7vw, 5.2rem);
+      color: rgba(175, 115, 120, 0.65);
+      letter-spacing: 1px;
+      margin: 0 0 8px;
+      line-height: 1;
+      text-shadow: 0 1px 0 rgba(255,255,255,0.55);
+    }
+
+    .invite-line{
+      margin: 0 0 10px;
+      font-family: "Poppins", sans-serif;
+      font-weight: 400;
+      font-size: 1rem;
+      color: var(--muted);
+      letter-spacing: 0.4px;
+    }
+
+    .name{
+      font-family: "Great Vibes", cursive;
+      font-size: clamp(2.7rem, 6vw, 4.2rem);
+      color: var(--accent);
+      margin: 6px 0 6px;
+      line-height: 1.05;
+      text-shadow:
+        0 1px 0 rgba(255,255,255,0.8),
+        0 0 10px rgba(255,255,255,0.35);
+    }
+
+    .subtitle2{
+      margin: 0 0 18px;
+      font-weight: 500;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .date-row{
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 14px;
+      margin: 10px auto 6px;
+      width: min(560px, 100%);
+    }
+
+    .date-box{
+      position: relative;
+      font-size: 1.15rem;
+      color: var(--muted);
+      padding: 12px 0;
+    }
+
+    .date-box::before,
+    .date-box::after{
+      content: "";
+      position: absolute;
+      left: 10%;
+      right: 10%;
+      height: 1px;
+      background: rgba(109, 91, 91, 0.35);
+      border-radius: 999px;
+    }
+
+    .date-box::before{ top: 6px; }
+    .date-box::after{ bottom: 6px; }
+
+    .daynum{
+      font-weight: 600;
+      font-size: clamp(3.0rem, 7vw, 3.8rem);
+      color: rgba(90, 75, 75, 0.75);
+      line-height: 1;
+      padding: 0 6px;
+      min-width: 70px;
+      text-align: center;
+    }
+
+    .month{
+      margin: 6px 0 16px;
+      font-size: 1.25rem;
+      color: rgba(90, 75, 75, 0.75);
+      letter-spacing: 0.3px;
+    }
+
+    .venue{
+      margin: 6px 0 14px;
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.45;
+    }
+
+    footer{
+      margin-top: 14px;
+      font-family: "Poppins", sans-serif;
+      font-size: 0.95rem;
+      color: rgba(90, 75, 75, 0.85);
+      line-height: 1.5;
+    }
+
+    /* =============================
+       Program styles
+    ============================== */
+    .program-grid{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px 34px;
+      margin-top: 14px;
+    }
+
+    .section{
+      text-align: center;
+      color: var(--muted);
+      padding: 6px 8px;
+    }
+
+    .section h2{
+      margin: 4px 0 8px;
+      font-family: "Great Vibes", cursive;
+      font-size: 2.3rem;
+      font-weight: 400;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    ul{
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      line-height: 1.85;
+      font-size: 1.05rem;
+    }
+
+    .divider{
+      width: 65%;
+      margin: 16px auto 0;
+      height: 1px;
+      background: rgba(139,90,90,0.25);
+      border-radius: 999px;
+    }
+
+    .roses{
+      margin-top: 14px;
+      text-align: center;
+      padding-top: 6px;
+    }
+
+    .roses h2{
+      margin: 6px 0 10px;
+      font-family: "Great Vibes", cursive;
+      font-size: 2.7rem;
+      font-weight: 400;
+      color: var(--accent);
+    }
+
+    /* =============================
+       Location styles
+    ============================== */
+    .location-title{
+      font-family:"Great Vibes", cursive;
+      font-size: clamp(2.4rem, 6vw, 3.4rem);
+      color: var(--accent);
+      margin: 0 0 10px;
+      font-weight: 400;
+    }
+
+    .location-address{
       font-family:"Poppins", sans-serif;
-      font-weight:600;
-      border-radius:999px;
-      padding:14px 26px;
-      background: rgba(139, 90, 90, 0.92);
-      color:#fff;
-      box-shadow: 0 10px 18px rgba(0,0,0,0.12);
-      transition: transform .15s ease, opacity .15s ease;
+      color: var(--muted);
+      margin: 0 0 16px;
+      line-height: 1.5;
       font-size: 1rem;
     }
 
-    .btn:hover{ transform: translateY(-1px); opacity:.96; }
+    .location-map{
+      width: 100%;
+      height: min(520px, 60vh);
+      border: 0;
+      border-radius: 18px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.10);
+      background: rgba(255,255,255,0.4);
+    }
 
-    .note{
-      margin-top:14px;
-      font-family:"Poppins", sans-serif;
-      color: rgba(90,75,75,0.85);
-      font-size: .92rem;
-      line-height: 1.5;
+    .location-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:center;
+      margin-top: 16px;
+    }
+
+    /* =============================
+       Responsive
+    ============================== */
+    @media (max-width: 620px){
+      .panel{ padding: 26px 16px 18px; margin: 16px; }
+      .program-grid{ grid-template-columns: 1fr; gap: 14px; }
+      .date-row{ gap: 10px; }
+      ul{ font-size: 1.02rem; }
+    }
+
+    @media (max-width: 520px){
+      .location-address{ font-size: 0.98rem; }
+      .location-map{ height: min(420px, 55vh); }
     }
   </style>
 </head>
 
 <body>
+  <!-- One audio element for the whole site (so music continues) -->
+  <audio id="bg-music" preload="auto" loop playsinline>
+    <source src="birthday-happy-birthday-music-song-295823.mp3" type="audio/mpeg" />
+    Your browser does not support the audio element.
+  </audio>
+
+  <button id="music-toggle" type="button" aria-label="Toggle background music">
+    🔊 Play Music
+  </button>
+
   <div class="card">
-    <h1 class="title">Welcome to Andrea’s 50th Birthday</h1>
+    <div class="panel">
 
-    <p class="subtitle">
-      Tap the button below to open the invitation.<br />
-    </p>
+      <!-- ===================== WELCOME (SECTION) ===================== -->
+      <section id="welcome" class="page active">
+        <div class="welcome-wrap">
+          <div class="welcome-content">
+            <h1 class="title">Welcome to Andrea’s 50th Birthday</h1>
+            <p class="subtitle">Tap the button below to open the invitation.</p>
+            <button class="btn" id="openInvitation">🎉 Open Invitation</button>
+          </div>
+        </div>
+      </section>
 
-    <!-- Preload music so it starts faster after click -->
-    <audio id="bg-music" preload="auto">
-      <source src="birthday-happy-birthday-music-song-295823.mp3" type="audio/mpeg">
-    </audio>
+      <!-- ===================== INVITATION ===================== -->
+      <section id="invitation" class="page">
+        <h1 class="fifty">fifty</h1>
+        <p class="invite-line">Please join us to celebrate</p>
 
-    <button class="btn" id="openInvitation">🎉 Open Invitation</button>
+        <div class="name">Andrea’s</div>
+        <div class="subtitle2">50th Birthday Party</div>
+
+        <div class="date-row">
+          <div class="date-box">Sunday</div>
+          <div class="daynum">15</div>
+          <div class="date-box">At 3:00 PM</div>
+        </div>
+
+        <div class="month">March</div>
+
+        <div class="venue">
+          Rosales Residence | Brgy Sta Monica<br />
+          San Pablo, Laguna
+        </div>
+
+        <div class="btn-row">
+          <a class="btn" href="#program">View Program Highlights →</a>
+          <a class="btn secondary" href="#location">📍 View Location</a>
+          <a class="btn secondary" href="#welcome">← Back to Welcome</a>
+        </div>
+
+        <footer>
+          An evening of love, laughter, and celebration ✨<br />
+          Dress Code: Elegant / Smart Casual
+        </footer>
+      </section>
+
+      <!-- ===================== PROGRAM ===================== -->
+      <section id="program" class="page">
+        <h1 class="fifty" style="margin-bottom:0; font-size: clamp(2.6rem, 6vw, 3.6rem);">Program</h1>
+        <div class="subtitle2" style="margin-top:4px;">Highlights ✨</div>
+
+        <div class="program-grid">
+          <section class="section">
+            <h2>Cakes</h2>
+            <ul>
+              <li>Ayen</li>
+              <li>Alex</li>
+              <li>Tita Yolly</li>
+              <li>Tita Waway</li>
+              <li>Tita Cle</li>
+            </ul>
+          </section>
+
+          <section class="section">
+            <h2>Perfumes</h2>
+            <ul>
+              <li>Jackelyn</li>
+              <li>Jhelyn</li>
+              <li>Jhane</li>
+              <li>Joy</li>
+              <li>Micha</li>
+            </ul>
+          </section>
+
+          <section class="section">
+            <h2>Gifts</h2>
+            <ul>
+              <li>Genesis</li>
+              <li>Ate Mila</li>
+              <li>Ate Necy</li>
+              <li>Ate Wena</li>
+              <li>Ate Vane</li>
+            </ul>
+          </section>
+
+          <section class="section">
+            <h2>Wishes</h2>
+            <ul>
+              <li>Tita Meng</li>
+              <li>Ate Helen</li>
+              <li>Ate Nery</li>
+              <li>Lanie</li>
+              <li>Ate Embang</li>
+            </ul>
+          </section>
+        </div>
+
+        <div class="divider"></div>
+
+        <section class="roses">
+          <h2>Roses</h2>
+          <ul>
+            <li>Jerico</li>
+            <li>Kuya Rico</li>
+            <li>Hero</li>
+            <li>Jomar</li>
+            <li>Willy</li>
+          </ul>
+        </section>
+
+        <div class="btn-row" style="margin-top:16px;">
+          <a class="btn secondary" href="#location">📍 View Location</a>
+          <a class="btn" href="#invitation">← Back to Invitation</a>
+        </div>
+      </section>
+
+      <!-- ===================== LOCATION ===================== -->
+      <section id="location" class="page">
+        <h1 class="location-title">Location</h1>
+
+        <p class="location-address">
+          <strong>Rosales Residence</strong><br>
+          Brgy Sta Monica, San Pablo, Laguna<br>
+          <span style="opacity:.85;">(14.058473, 121.301432)</span>
+        </p>
+
+        <iframe
+          class="location-map"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          src="https://www.google.com/maps?q=14.058473,121.301432&z=17&output=embed">
+        </iframe>
+
+        <div class="location-actions">
+          <a class="btn" target="_blank" rel="noopener"
+             href="https://www.google.com/maps/dir/?api=1&destination=14.058473,121.301432">
+            Open in Google Maps
+          </a>
+
+          <a class="btn" target="_blank" rel="noopener"
+             href="https://waze.com/ul?ll=14.058473,121.301432&navigate=yes">
+            Open in Waze
+          </a>
+
+          <a class="btn secondary" href="#program">View Program →</a>
+          <a class="btn secondary" href="#welcome">← Exit</a>
+        </div>
+      </section>
+
+    </div>
   </div>
 
   <script>
+    // -----------------------
+    // Single-page navigation
+    // -----------------------
+    function showPageFromHash() {
+      const allowed = new Set(["#welcome", "#invitation", "#program", "#location"]);
+      const hash = allowed.has(location.hash) ? location.hash : "#welcome";
+
+      document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+      document.querySelector(hash).classList.add("active");
+    }
+
+    window.addEventListener("hashchange", showPageFromHash);
+    window.addEventListener("load", showPageFromHash);
+
+    // -----------------------
+    // Music controls
+    // -----------------------
     const audio = document.getElementById("bg-music");
-    const btn = document.getElementById("openInvitation");
+    const openBtn = document.getElementById("openInvitation");
+    const toggleBtn = document.getElementById("music-toggle");
+    const KEY = "bgMusicPlaying";
 
-    btn.addEventListener("click", async () => {
-      // Tell the next pages to autoplay music
-      localStorage.setItem("bgMusicPlaying", "true");
+    function updateMusicBtn() {
+      toggleBtn.textContent = audio.paused ? "🔊 Play Music" : "🔇 Pause Music";
+    }
 
-      // Attempt to start music with sound (allowed because user clicked)
+    // Start music AFTER click (unmuted) then go to invitation section
+    openBtn.addEventListener("click", async () => {
+      localStorage.setItem(KEY, "true");
+
       try {
-        audio.muted = true;
+        audio.muted = false;
+        audio.volume = 0.5;  // optional
         await audio.play();
       } catch (e) {
-        // If blocked, still proceed to invitation page
+        console.log("Audio play blocked:", e);
       }
 
-      // ✅ Go to your invitation page (NOT welcome.html)
-      window.location.href = "welcome.html";
+      updateMusicBtn();
+      location.hash = "#invitation";
+    });
+
+    // Toggle button play/pause
+    toggleBtn.addEventListener("click", async () => {
+      try {
+        if (audio.paused) {
+          audio.muted = false;
+          await audio.play();
+          localStorage.setItem(KEY, "true");
+        } else {
+          audio.pause();
+          localStorage.setItem(KEY, "false");
+        }
+      } catch (e) {
+        console.log("Audio toggle blocked:", e);
+      }
+      updateMusicBtn();
+    });
+
+    // Restore music preference (if user enabled before)
+    window.addEventListener("load", async () => {
+      updateMusicBtn();
+
+      const shouldPlay = localStorage.getItem(KEY) === "true";
+      if (!shouldPlay) return;
+
+      try {
+        audio.muted = false;
+        audio.volume = 0.5;
+        await audio.play();
+      } catch (e) {
+        // Some browsers still require a tap; the toggle button will work.
+      }
+
+      updateMusicBtn();
     });
   </script>
 </body>
