@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Location 📍</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --accent: #8b5a5a;
+      --muted: #6d5b5b;
+      --panel: rgba(227, 205, 201, 0.78);
+      --panel-border: rgba(255, 255, 255, 0.55);
+      --shadow: 0 16px 34px rgba(0,0,0,0.18);
+    }
+    *{ box-sizing: border-box; }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      font-family:"Playfair Display", serif;
+      background:
+        linear-gradient(rgba(248,235,231,0.70), rgba(248,235,231,0.70)),
+        url("1000107106.jpg");
+      background-size:cover;
+      background-position:center;
+      background-repeat:no-repeat;
+    }
+
+    .card{
+      width:min(920px, 96vw);
+      border-radius:26px;
+      box-shadow: var(--shadow);
+      background: rgba(255,255,255,0.55);
+      border: 1px solid rgba(255,255,255,0.45);
+      backdrop-filter: blur(4px);
+      overflow:hidden;
+    }
+
+    .panel{
+      margin: 22px;
+      border-radius: 22px;
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      padding: 26px 22px 22px;
+      text-align:center;
+    }
+
+    h1{
+      font-family:"Great Vibes", cursive;
+      font-size: clamp(2.4rem, 6vw, 3.4rem);
+      color: var(--accent);
+      margin: 0 0 10px;
+      font-weight: 400;
+    }
+
+    .address{
+      font-family:"Poppins", sans-serif;
+      color: var(--muted);
+      margin: 0 0 16px;
+      line-height: 1.5;
+      font-size: 1rem;
+    }
+
+    .map{
+      width: 100%;
+      height: min(520px, 60vh);
+      border: 0;
+      border-radius: 18px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.10);
+      background: rgba(255,255,255,0.4);
+    }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:center;
+      margin-top: 16px;
+    }
+
+    .btn{
+      display:inline-block;
+      text-decoration:none;
+      font-family:"Poppins", sans-serif;
+      font-weight: 600;
+      color:#fff;
+      background: rgba(139, 90, 90, 0.92);
+      padding: 12px 18px;
+      border-radius: 999px;
+      box-shadow: 0 10px 18px rgba(0,0,0,0.12);
+      transition: transform .15s ease, opacity .15s ease;
+    }
+    .btn:hover{ transform: translateY(-1px); opacity: .96; }
+
+    .btn.secondary{
+      background: rgba(109, 91, 91, 0.85);
+    }
+
+    @media (max-width: 520px){
+      .panel{ margin: 16px; padding: 20px 16px 16px; }
+      .address{ font-size: 0.98rem; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <div class="panel">
+      <h1>Location</h1>
+
+      <p class="address">
+        <strong>Rosales Residence</strong><br>
+        Brgy Sta Monica, San Pablo, Laguna<br>
+        <span style="opacity:.85;">(14.058473, 121.301432)</span>
+      </p>
+
+      <!-- Google Maps Embed using coordinates -->
+      <iframe
+        class="map"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        src="https://www.google.com/maps?q=14.058473,121.301432&z=17&output=embed">
+      </iframe>
+
+      <div class="actions">
+        <!-- Google Maps directions -->
+        <a class="btn" target="_blank"
+           href="https://www.google.com/maps/dir/?api=1&destination=14.058473,121.301432">
+          Open in Google Maps
+        </a>
+
+        <!-- Waze navigation -->
+        <a class="btn" target="_blank"
+           href="https://waze.com/ul?ll=14.058473,121.301432&navigate=yes">
+          Open in Waze
+        </a>
+
+        <!-- Back to invitation -->
+        <a class="btn secondary" href="welcome.html">
+          ← Back to Invitation
+        </a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
