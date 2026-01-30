@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Andrea’s 50th — Welcome</title>
 
+  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
 
   <style>
@@ -13,6 +14,9 @@
       --muted:#6d5b5b;
       --shadow:0 16px 34px rgba(0,0,0,0.18);
     }
+
+    * { box-sizing: border-box; }
+
     body{
       margin:0;
       min-height:100vh;
@@ -21,23 +25,39 @@
       justify-content:center;
       padding:24px;
       font-family:"Playfair Display", serif;
-      background:
+
+      /* CLEAN floral background (soft overlay to reduce busy look) */
+      background-image:
+        radial-gradient(circle at top, rgba(255,255,255,0.65), rgba(248,235,231,0.92)),
         linear-gradient(rgba(248,235,231,0.70), rgba(248,235,231,0.70)),
         url("1000107106.jpg");
-      background-size:cover;
-      background-position:center;
-      background-repeat:no-repeat;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
     }
+
+    /* Optional soft vignette for extra cleanliness */
+    body::before{
+      content:"";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at center, rgba(0,0,0,0.00), rgba(0,0,0,0.10));
+    }
+
     .card{
       width:min(760px, 96vw);
       border-radius:26px;
-      background: rgba(255,255,255,0.60);
-      backdrop-filter: blur(4px);
+      background: rgba(255,255,255,0.62);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
       box-shadow: var(--shadow);
-      padding:34px 26px;
+      padding:36px 26px;
       text-align:center;
-      border: 1px solid rgba(255,255,255,0.45);
+      border: 1px solid rgba(255,255,255,0.55);
+      position: relative;
     }
+
     .title{
       font-family:"Great Vibes", cursive;
       font-size: clamp(2.8rem, 7vw, 4.2rem);
@@ -45,6 +65,7 @@
       margin: 0 0 8px;
       font-weight: 400;
     }
+
     .subtitle{
       font-family:"Poppins", sans-serif;
       color: var(--muted);
@@ -53,6 +74,7 @@
       letter-spacing: .3px;
       line-height: 1.5;
     }
+
     .btn{
       border:none;
       cursor:pointer;
@@ -66,12 +88,14 @@
       transition: transform .15s ease, opacity .15s ease;
       font-size: 1rem;
     }
+
     .btn:hover{ transform: translateY(-1px); opacity:.96; }
+
     .note{
-      margin-top:16px;
+      margin-top:14px;
       font-family:"Poppins", sans-serif;
       color: rgba(90,75,75,0.85);
-      font-size: .95rem;
+      font-size: .92rem;
       line-height: 1.5;
     }
   </style>
@@ -79,11 +103,13 @@
 
 <body>
   <div class="card">
-    <h1 class="title">Andrea’s 50th</h1>
+    <h1 class="title">Welcome to Andrea’s 50th Birthday</h1>
+
     <p class="subtitle">
-      Tap the button below to open the invitation.<br>
+      Tap the button below to open the invitation.<br />
     </p>
 
+    <!-- Preload music so it starts faster after click -->
     <audio id="bg-music" preload="auto">
       <source src="birthday-happy-birthday-music-song-295823.mp3" type="audio/mpeg">
     </audio>
@@ -96,18 +122,18 @@
     const btn = document.getElementById("openInvitation");
 
     btn.addEventListener("click", async () => {
-      // Mark music ON for the next pages
+      // Tell the next pages to autoplay music
       localStorage.setItem("bgMusicPlaying", "true");
 
-      // Try to start music with sound (allowed because user clicked)
+      // Attempt to start music with sound (allowed because user clicked)
       try {
-        audio.muted = false;
+        audio.muted = true;
         await audio.play();
       } catch (e) {
-        // If blocked, still proceed
+        // If blocked, still proceed to invitation page
       }
 
-      // Go to invitation page
+      // ✅ Go to your invitation page (NOT welcome.html)
       window.location.href = "welcome.html";
     });
   </script>
