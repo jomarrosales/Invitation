@@ -441,8 +441,6 @@
 
         <div class="btn-row">
           <a class="btn" href="#program">View Program Highlights →</a>
-          <a class="btn secondary" href="#location">📍 View Location</a>
-          <a class="btn secondary" href="#welcome">← Back to Welcome</a>
         </div>
 
         <footer>
@@ -483,7 +481,7 @@
             <h2>Gifts</h2>
             <ul>
               <li>Genesis</li>
-              <li>Ate Mila</li>
+              <li>Mary Jane Soriano</li>
               <li>Ate Necy</li>
               <li>Ate Wena</li>
               <li>Ate Vane</li>
@@ -507,17 +505,16 @@
         <section class="roses">
           <h2>Roses</h2>
           <ul>
-            <li>Jerico</li>
-            <li>Kuya Rico</li>
-            <li>Hero</li>
             <li>Jomar</li>
+            <li>Hero</li>
+            <li>Kuya Rico</li>
+            <li>Jericho</li>
             <li>Willy</li>
           </ul>
         </section>
 
         <div class="btn-row" style="margin-top:16px;">
-          <a class="btn secondary" href="#location">📍 View Location</a>
-          <a class="btn" href="#invitation">← Back to Invitation</a>
+          <a class="btn" href="#location">📍 View Location</a>
         </div>
       </section>
 
@@ -548,8 +545,6 @@
              href="https://waze.com/ul?ll=14.058473,121.301432&navigate=yes">
             Open in Waze
           </a>
-
-          <a class="btn secondary" href="#program">View Program →</a>
           <a class="btn secondary" href="#welcome">← Exit</a>
         </div>
       </section>
@@ -577,6 +572,7 @@
     // -----------------------
     const audio = document.getElementById("bg-music");
     const openBtn = document.getElementById("openInvitation");
+    const exitBtn = document.getElementById("offmusic");
     const toggleBtn = document.getElementById("music-toggle");
     const KEY = "bgMusicPlaying";
 
@@ -599,6 +595,22 @@
       updateMusicBtn();
       location.hash = "#invitation";
     });
+
+    // Off music AFTER click (unmuted) then go to open section
+    /*exitBtn.addEventListener("click", async () => {
+      localStorage.setItem(KEY, "false");
+
+      try {
+        audio.muted = true;
+        audio.volume = 0.5;  // optional
+        await audio.play();
+      } catch (e) {
+        console.log("Audio play blocked:", e);
+      }
+
+      updateMusicBtn();
+      location.hash = "#welcome";
+    });*/
 
     // Toggle button play/pause
     toggleBtn.addEventListener("click", async () => {
