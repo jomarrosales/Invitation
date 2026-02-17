@@ -376,74 +376,104 @@
       margin-top: 16px;
     }
 
-
     /* =============================
-   Photos section
-============================= */
-.photos-title{
-  font-family: "Great Vibes", cursive;
-  font-size: clamp(2.4rem, 6vw, 3.4rem);
-  color: var(--accent);
-  margin: 0 0 10px;
-  font-weight: 400;
-  text-align: center;
-}
-
-.photo-wrap{
-  max-width: min(720px, 92vw);
-  margin: 10px auto 0;
-  background: var(--paper);
-  border: 1px solid rgba(255,255,255,0.55);
-  border-radius: 18px;
-  box-shadow: 0 12px 26px rgba(0,0,0,0.10);
-  padding: 12px;
-}
-
-.hero-img{
-  width: 100%;
-  max-height: min(70vh, 620px);
-  object-fit: cover;
-  display: block;
-  border-radius: 12px;
-  background: rgba(255,255,255,0.4);
-}
-
-.photo-controls{
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  margin-top: 12px;
-}
-
-.photo-caption{
-  margin-top: 8px;
-  text-align: center;
-  font-family:"Poppins", sans-serif;
-  color: var(--muted);
-  font-size: 0.98rem;
-}
-
-
-/* Cross-fade between photos */
-.hero-img {
-  transition: opacity .5s ease;
-  opacity: 1;
-}
-.hero-img.is-fading {
-  opacity: 0;
-}
-
-
-    /* =============================
-       Responsive
+       Photos section
     ============================== */
-    @media (max-width: 620px){
-      .panel{ padding: 26px 16px 18px; margin: 16px; }
-      .program-grid{ grid-template-columns: 1fr; gap: 14px; }
-      .date-row{ gap: 10px; }
-      ul{ font-size: 1.02rem; }
+    .photos-title{
+      font-family: "Great Vibes", cursive;
+      font-size: clamp(2.4rem, 6vw, 3.4rem);
+      color: var(--accent);
+      margin: 0 0 10px;
+      font-weight: 400;
+      text-align: center;
     }
 
+    .photo-wrap{
+      max-width: min(720px, 92vw);
+      margin: 10px auto 0;
+      background: var(--paper);
+      border: 1px solid rgba(255,255,255,0.55);
+      border-radius: 18px;
+      box-shadow: 0 12px 26px rgba(0,0,0,0.10);
+      padding: 12px;
+    }
+
+    .hero-img{
+      width: 100%;
+      max-height: min(70vh, 620px);
+      object-fit: cover;
+      display: block;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.4);
+      /* Cross-fade between photos */
+      transition: opacity .5s ease;
+      opacity: 1;
+    }
+    .hero-img.is-fading { opacity: 0; }
+
+    .photo-controls{
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 12px;
+    }
+
+    .photo-caption{
+      margin-top: 8px;
+      text-align: center;
+      font-family:"Poppins", sans-serif;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    /* =============================
+       Responsive – mobile-focused enhancements
+       (Only active at ≤620px)
+    ============================== */
+    @media (max-width: 620px){
+      /* Use the screen better */
+      .panel{ padding: 20px 14px 14px; margin: 12px; }
+      .card{ width: 98vw; }
+
+      /* Prioritize the photo area */
+      .photos-title{
+        font-size: clamp(2.0rem, 8vw, 2.6rem);
+        margin-bottom: 8px;
+      }
+      .photo-wrap{
+        max-width: 100%;
+        margin-top: 6px;
+        padding: 8px;            /* tighter chrome */
+        border-radius: 14px;
+      }
+      .hero-img{
+        max-height: min(78vh, 720px);  /* taller image on phones */
+        border-radius: 10px;
+        object-fit: cover;
+        aspect-ratio: 16 / 10;         /* adjust to 4/3 if your photos are taller */
+      }
+
+      /* Make buttons smaller */
+      .photo-controls{ gap: 8px; margin-top: 10px; }
+      .btn{
+        font-size: 0.88rem;     /* smaller text */
+        padding: 6px 10px;      /* smaller padding */
+        box-shadow: 0 8px 14px rgba(0,0,0,0.10);
+      }
+
+      /* Slightly tighten list pages too */
+      .program-grid{ gap: 14px; }
+      ul{ font-size: 1.02rem; }
+      .date-row{ gap: 10px; }
+    }
+
+    /* Even smaller phones (≤400px wide) */
+    @media (max-width: 400px){
+      .btn{ font-size: 0.84rem; padding: 5px 9px; }
+      .photo-caption{ font-size: 0.9rem; }
+    }
+
+    /* Additional responsive from your original */
     @media (max-width: 520px){
       .location-address{ font-size: 0.98rem; }
       .location-map{ height: min(420px, 55vh); }
@@ -576,34 +606,29 @@
         </div>
       </section>
 
+      <!-- ===================== PHOTOS ===================== -->
+      <section id="photos" class="page">
+        <h1 class="photos-title">Celebrant Photos</h1>
 
-      
+        <div class="photo-wrap">
+          <img
+            id="randomPhoto"
+            class="hero-img"
+            src=""
+            alt="Random photo of Andrea"
+            loading="lazy"
+            decoding="async"
+          />
 
-<!-- ===================== PHOTOS ===================== -->
-<section id="photos" class="page">
-  <h1 class="photos-title">Celebrant Photos</h1>
+          <div class="photo-caption" id="photoCaption">Tap “Play” or “Shuffle” to begin.</div>
 
-  <div class="photo-wrap">
-    <img
-      id="randomPhoto"
-      class="hero-img"
-      src=""
-      alt="Random photo of Andrea"
-      loading="lazy"
-      decoding="async"
-    />
-
-    <div class="photo-caption" id="photoCaption">Tap “Play” or “Shuffle” to begin.</div>
-
-    <div class="photo-controls">
-      <button class="btn" id="btnPlayPause" type="button">▶️ Play</button>
-      <button class="btn" id="btnShuffle" type="button">Shuffle</button>
-      <a class="btn" href="#location">📍 View Location</a>
-    </div>
-  </div>
-</section>
-
-
+          <div class="photo-controls">
+            <button class="btn" id="btnPlayPause" type="button">▶️ Play</button>
+            <button class="btn" id="btnShuffle" type="button">Shuffle</button>
+            <a class="btn" href="#location">📍 View Location</a>
+          </div>
+        </div>
+      </section>
 
       <!-- ===================== LOCATION ===================== -->
       <section id="location" class="page">
@@ -643,16 +668,13 @@
     // -----------------------
     // Single-page navigation
     // -----------------------
-    
-function showPageFromHash() {
-  const allowed = new Set(["#welcome", "#invitation", "#program", "#location", "#photos"]);
-  const hash = allowed.has(location.hash) ? location.hash : "#welcome";
+    function showPageFromHash() {
+      const allowed = new Set(["#welcome", "#invitation", "#program", "#location", "#photos"]);
+      const hash = allowed.has(location.hash) ? location.hash : "#welcome";
 
-  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-  document.querySelector(hash).classList.add("active");
-}
-
-
+      document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+      document.querySelector(hash).classList.add("active");
+    }
     window.addEventListener("hashchange", showPageFromHash);
     window.addEventListener("load", showPageFromHash);
 
@@ -684,22 +706,6 @@ function showPageFromHash() {
       updateMusicBtn();
       location.hash = "#invitation";
     });
-
-    // Off music AFTER click (unmuted) then go to open section
-    /*exitBtn.addEventListener("click", async () => {
-      localStorage.setItem(KEY, "false");
-
-      try {
-        audio.muted = true;
-        audio.volume = 0.5;  // optional
-        await audio.play();
-      } catch (e) {
-        console.log("Audio play blocked:", e);
-      }
-
-      updateMusicBtn();
-      location.hash = "#welcome";
-    });*/
 
     // Toggle button play/pause
     toggleBtn.addEventListener("click", async () => {
@@ -736,154 +742,125 @@ function showPageFromHash() {
       updateMusicBtn();
     });
 
+    // -----------------------
+    // Random Photos + Slideshow
+    // -----------------------
+    const photoList = [
+      "images/IMG_4017.jpeg",
+      "images/IMG_4008.jpeg",
+      "images/IMG_4029.jpeg",
+      "images/IMG_4011.jpeg",
+      "images/IMG_4009.jpeg",
+      "images/IMG_4028.jpeg",
+      "images/IMG_4022.jpeg",
+      "images/IMG_4020.jpeg"
+    ];
 
-    
+    const captions = [
+      "Andrea celebrating with family",
+      "Throwback moment",
+      "A candid smile",
+      "With friends",
+      "Birthday highlight"
+    ];
 
-// -----------------------
-// Random Photos + Slideshow
-// -----------------------
+    const SLIDE_SECONDS = 4;
 
-// 1) Put your image files in /images (or your folder). Update as needed.
-const photoList = [
-  "images/IMG_4017.jpeg",
-  "images/IMG_4008.jpeg",
-  "images/IMG_4029.jpeg",
-  "images/IMG_4011.jpeg",
-  "images/IMG_4009.jpeg",
-  "images/IMG_4028.jpeg",
-  "images/IMG_4022.jpeg",
-  "images/IMG_4020.jpeg"
-];
+    const _preload = [];
+    photoList.forEach(src => { const i = new Image(); i.src = src; _preload.push(i); });
 
-// Optional captions (same order). Leave missing entries to auto-generate.
-const captions = [
-  "Andrea celebrating with family",
-  "Throwback moment",
-  "A candid smile",
-  "With friends",
-  "Birthday highlight"
-];
+    let _pool = photoList.map((_, i) => i);
+    let _current = -1;
 
-// Config: seconds between slides
-const SLIDE_SECONDS = 4;
+    let _timer = null;
+    const _img = () => document.getElementById("randomPhoto");
+    const _cap = () => document.getElementById("photoCaption");
+    const _playBtn = () => document.getElementById("btnPlayPause");
 
-// Preload for smoother transitions
-const _preload = [];
-photoList.forEach(src => { const i = new Image(); i.src = src; _preload.push(i); });
+    function pickIndexNoRepeat() {
+      if (_pool.length === 0) _pool = photoList.map((_, i) => i);
+      const r = Math.floor(Math.random() * _pool.length);
+      return _pool.splice(r, 1)[0];
+    }
 
-// No-repeat shuffle pool
-let _pool = photoList.map((_, i) => i);
-let _current = -1;
+    function setImageWithFade(src, altText) {
+      const img = _img();
+      if (!img) return;
 
-// Slideshow timer id
-let _timer = null;
-const _img = () => document.getElementById("randomPhoto");
-const _cap = () => document.getElementById("photoCaption");
-const _playBtn = () => document.getElementById("btnPlayPause");
+      img.classList.add("is-fading");
+      setTimeout(() => {
+        img.src = src;
+        img.alt = altText;
+        img.classList.remove("is-fading");
+      }, 240);
+    }
 
-// Utility: get next index without repeating until pool resets
-function pickIndexNoRepeat() {
-  if (_pool.length === 0) _pool = photoList.map((_, i) => i);
-  const r = Math.floor(Math.random() * _pool.length);
-  return _pool.splice(r, 1)[0];
-}
+    function showPhotoByIndex(i) {
+      const img = _img();
+      const cap = _cap();
+      if (!img) return;
 
-// Transition helper (optional cross-fade)
-function setImageWithFade(src, altText) {
-  const img = _img();
-  if (!img) return;
+      const src = photoList[i] || "";
+      const text = captions[i] ? captions[i] : `Photo ${i + 1} of ${photoList.length}`;
 
-  img.classList.add("is-fading");
-  // Wait for fade-out, then swap src, then fade-in
-  setTimeout(() => {
-    img.src = src;
-    img.alt = altText;
-    img.classList.remove("is-fading");
-  }, 240); // half of the .5s transition is enough
-}
+      setImageWithFade(src, captions[i] || `Andrea photo ${i + 1}`);
 
-function showPhotoByIndex(i) {
-  const img = _img();
-  const cap = _cap();
-  if (!img) return;
+      if (cap) cap.textContent = text;
+      _current = i;
+    }
 
-  const src = photoList[i] || "";
-  const text = captions[i] ? captions[i] : `Photo ${i + 1} of ${photoList.length}`;
+    function showRandomPhoto() {
+      const i = pickIndexNoRepeat();
+      showPhotoByIndex(i);
+    }
 
-  // Apply with fade
-  setImageWithFade(src, captions[i] || `Andrea photo ${i + 1}`);
+    function isPlaying() { return _timer !== null; }
 
-  if (cap) cap.textContent = text;
-  _current = i;
-}
+    function startSlideshow() {
+      if (isPlaying()) return;
+      showRandomPhoto();
+      _timer = setInterval(showRandomPhoto, SLIDE_SECONDS * 1000);
+      updatePlayBtn();
+    }
 
-function showRandomPhoto() {
-  const i = pickIndexNoRepeat();
-  showPhotoByIndex(i);
-}
+    function pauseSlideshow() {
+      if (_timer) {
+        clearInterval(_timer);
+        _timer = null;
+        updatePlayBtn();
+      }
+    }
 
-// ---- Slideshow control ----
-function isPlaying() { return _timer !== null; }
+    function updatePlayBtn() {
+      const btn = _playBtn();
+      if (!btn) return;
+      btn.textContent = isPlaying() ? "⏸ Pause" : "▶️ Play";
+    }
 
-function startSlideshow() {
-  if (isPlaying()) return;
+    document.getElementById("btnShuffle")?.addEventListener("click", () => {
+      if (!isPlaying()) startSlideshow();
+      else showRandomPhoto();
+    });
 
-  // Immediately show one (so we don't wait for interval)
-  showRandomPhoto();
+    _playBtn()?.addEventListener("click", () => {
+      if (isPlaying()) pauseSlideshow();
+      else startSlideshow();
+    });
 
-  _timer = setInterval(showRandomPhoto, SLIDE_SECONDS * 1000);
-  updatePlayBtn();
-}
+    window.addEventListener("hashchange", () => {
+      if (location.hash === "#photos") {
+        if (_current === -1) showRandomPhoto();
+      } else {
+        pauseSlideshow();
+      }
+    });
 
-function pauseSlideshow() {
-  if (_timer) {
-    clearInterval(_timer);
-    _timer = null;
-    updatePlayBtn();
-  }
-}
-
-function updatePlayBtn() {
-  const btn = _playBtn();
-  if (!btn) return;
-  btn.textContent = isPlaying() ? "⏸ Pause" : "▶️ Play";
-}
-
-// Buttons
-document.getElementById("btnShuffle")?.addEventListener("click", () => {
-  // On first user interaction, also start autoplay if you prefer “auto next after clicking”
-  // If you want Shuffle to NOT start the slideshow, remove startSlideshow() here.
-  if (!isPlaying()) startSlideshow();
-  else showRandomPhoto(); // while playing, Shuffle jumps to new random immediately
-});
-
-_playBtn()?.addEventListener("click", () => {
-  if (isPlaying()) pauseSlideshow();
-  else startSlideshow();
-});
-
-// When navigating to Photos, optionally auto-start once per session
-window.addEventListener("hashchange", () => {
-  if (location.hash === "#photos") {
-    // Begin with a photo visible; don't autostart unless you want immediate play:
-    // startSlideshow();  // uncomment to auto-play upon entering #photos
-    if (_current === -1) showRandomPhoto();
-  } else {
-    // Stop slideshow when leaving the page
-    pauseSlideshow();
-  }
-});
-
-// If page loads directly on #photos
-window.addEventListener("load", () => {
-  updatePlayBtn();
-  if (location.hash === "#photos") {
-    if (_current === -1) showRandomPhoto();
-    // startSlideshow(); // optional: auto-play if landing directly on Photos
-  }
-});
-
-
+    window.addEventListener("load", () => {
+      updatePlayBtn();
+      if (location.hash === "#photos") {
+        if (_current === -1) showRandomPhoto();
+      }
+    });
   </script>
 </body>
 </html>
