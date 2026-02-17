@@ -376,6 +376,64 @@
       margin-top: 16px;
     }
 
+
+    /* =============================
+   Photos section
+============================= */
+.photos-title{
+  font-family: "Great Vibes", cursive;
+  font-size: clamp(2.4rem, 6vw, 3.4rem);
+  color: var(--accent);
+  margin: 0 0 10px;
+  font-weight: 400;
+  text-align: center;
+}
+
+.photo-wrap{
+  max-width: min(720px, 92vw);
+  margin: 10px auto 0;
+  background: var(--paper);
+  border: 1px solid rgba(255,255,255,0.55);
+  border-radius: 18px;
+  box-shadow: 0 12px 26px rgba(0,0,0,0.10);
+  padding: 12px;
+}
+
+.hero-img{
+  width: 100%;
+  max-height: min(70vh, 620px);
+  object-fit: cover;
+  display: block;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.4);
+}
+
+.photo-controls{
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.photo-caption{
+  margin-top: 8px;
+  text-align: center;
+  font-family:"Poppins", sans-serif;
+  color: var(--muted);
+  font-size: 0.98rem;
+}
+
+
+/* Cross-fade between photos */
+.hero-img {
+  transition: opacity .5s ease;
+  opacity: 1;
+}
+.hero-img.is-fading {
+  opacity: 0;
+}
+
+
     /* =============================
        Responsive
     ============================== */
@@ -514,9 +572,38 @@
         </section>
 
         <div class="btn-row" style="margin-top:16px;">
-          <a class="btn" href="#location">📍 View Location</a>
+          <a class="btn" href="#photos">Next</a>
         </div>
       </section>
+
+
+      
+
+<!-- ===================== PHOTOS ===================== -->
+<section id="photos" class="page">
+  <h1 class="photos-title">Celebrant Photos</h1>
+
+  <div class="photo-wrap">
+    <img
+      id="randomPhoto"
+      class="hero-img"
+      src=""
+      alt="Random photo of Andrea"
+      loading="lazy"
+      decoding="async"
+    />
+
+    <div class="photo-caption" id="photoCaption">Tap “Play” or “Shuffle” to begin.</div>
+
+    <div class="photo-controls">
+      <button class="btn" id="btnPlayPause" type="button">▶️ Play</button>
+      <button class="btn" id="btnShuffle" type="button">Shuffle</button>
+      <a class="btn" href="#location">📍 View Location</a>
+    </div>
+  </div>
+</section>
+
+
 
       <!-- ===================== LOCATION ===================== -->
       <section id="location" class="page">
@@ -556,13 +643,15 @@
     // -----------------------
     // Single-page navigation
     // -----------------------
-    function showPageFromHash() {
-      const allowed = new Set(["#welcome", "#invitation", "#program", "#location"]);
-      const hash = allowed.has(location.hash) ? location.hash : "#welcome";
+    
+function showPageFromHash() {
+  const allowed = new Set(["#welcome", "#invitation", "#program", "#location", "#photos"]);
+  const hash = allowed.has(location.hash) ? location.hash : "#welcome";
 
-      document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-      document.querySelector(hash).classList.add("active");
-    }
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.querySelector(hash).classList.add("active");
+}
+
 
     window.addEventListener("hashchange", showPageFromHash);
     window.addEventListener("load", showPageFromHash);
@@ -646,6 +735,155 @@
 
       updateMusicBtn();
     });
+
+
+    
+
+// -----------------------
+// Random Photos + Slideshow
+// -----------------------
+
+// 1) Put your image files in /images (or your folder). Update as needed.
+const photoList = [
+  "images/IMG_4017.JPEG",
+  "images/IMG_4008.JPEG",
+  "images/IMG_4029.JPEG",
+  "images/IMG_4011.JPEG",
+  "images/IMG_4009.JPEG",
+  "images/IMG_4028.JPEG",
+  "images/IMG_4022.JPEG",
+  "images/IMG_4020.JPEG"
+];
+
+// Optional captions (same order). Leave missing entries to auto-generate.
+const captions = [
+  "Andrea celebrating with family",
+  "Throwback moment",
+  "A candid smile",
+  "With friends",
+  "Birthday highlight"
+];
+
+// Config: seconds between slides
+const SLIDE_SECONDS = 4;
+
+// Preload for smoother transitions
+const _preload = [];
+photoList.forEach(src => { const i = new Image(); i.src = src; _preload.push(i); });
+
+// No-repeat shuffle pool
+let _pool = photoList.map((_, i) => i);
+let _current = -1;
+
+// Slideshow timer id
+let _timer = null;
+const _img = () => document.getElementById("randomPhoto");
+const _cap = () => document.getElementById("photoCaption");
+const _playBtn = () => document.getElementById("btnPlayPause");
+
+// Utility: get next index without repeating until pool resets
+function pickIndexNoRepeat() {
+  if (_pool.length === 0) _pool = photoList.map((_, i) => i);
+  const r = Math.floor(Math.random() * _pool.length);
+  return _pool.splice(r, 1)[0];
+}
+
+// Transition helper (optional cross-fade)
+function setImageWithFade(src, altText) {
+  const img = _img();
+  if (!img) return;
+
+  img.classList.add("is-fading");
+  // Wait for fade-out, then swap src, then fade-in
+  setTimeout(() => {
+    img.src = src;
+    img.alt = altText;
+    img.classList.remove("is-fading");
+  }, 240); // half of the .5s transition is enough
+}
+
+function showPhotoByIndex(i) {
+  const img = _img();
+  const cap = _cap();
+  if (!img) return;
+
+  const src = photoList[i] || "";
+  const text = captions[i] ? captions[i] : `Photo ${i + 1} of ${photoList.length}`;
+
+  // Apply with fade
+  setImageWithFade(src, captions[i] || `Andrea photo ${i + 1}`);
+
+  if (cap) cap.textContent = text;
+  _current = i;
+}
+
+function showRandomPhoto() {
+  const i = pickIndexNoRepeat();
+  showPhotoByIndex(i);
+}
+
+// ---- Slideshow control ----
+function isPlaying() { return _timer !== null; }
+
+function startSlideshow() {
+  if (isPlaying()) return;
+
+  // Immediately show one (so we don't wait for interval)
+  showRandomPhoto();
+
+  _timer = setInterval(showRandomPhoto, SLIDE_SECONDS * 1000);
+  updatePlayBtn();
+}
+
+function pauseSlideshow() {
+  if (_timer) {
+    clearInterval(_timer);
+    _timer = null;
+    updatePlayBtn();
+  }
+}
+
+function updatePlayBtn() {
+  const btn = _playBtn();
+  if (!btn) return;
+  btn.textContent = isPlaying() ? "⏸ Pause" : "▶️ Play";
+}
+
+// Buttons
+document.getElementById("btnShuffle")?.addEventListener("click", () => {
+  // On first user interaction, also start autoplay if you prefer “auto next after clicking”
+  // If you want Shuffle to NOT start the slideshow, remove startSlideshow() here.
+  if (!isPlaying()) startSlideshow();
+  else showRandomPhoto(); // while playing, Shuffle jumps to new random immediately
+});
+
+_playBtn()?.addEventListener("click", () => {
+  if (isPlaying()) pauseSlideshow();
+  else startSlideshow();
+});
+
+// When navigating to Photos, optionally auto-start once per session
+window.addEventListener("hashchange", () => {
+  if (location.hash === "#photos") {
+    // Begin with a photo visible; don't autostart unless you want immediate play:
+    // startSlideshow();  // uncomment to auto-play upon entering #photos
+    if (_current === -1) showRandomPhoto();
+  } else {
+    // Stop slideshow when leaving the page
+    pauseSlideshow();
+  }
+});
+
+// If page loads directly on #photos
+window.addEventListener("load", () => {
+  updatePlayBtn();
+  if (location.hash === "#photos") {
+    if (_current === -1) showRandomPhoto();
+    // startSlideshow(); // optional: auto-play if landing directly on Photos
+  }
+});
+
+
   </script>
 </body>
 </html>
