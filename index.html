@@ -402,18 +402,25 @@
    Hero Image (Exact Desktop Size + Responsive)
 ============================== */
 .hero-img{
-  width: 700px;          /* Exact desktop width */
-  height: 500px;         /* Exact desktop height */
-  max-width: 100%;       /* Prevent overflow */
+  width: 700px;
+  height: 500px;
+  max-width: 100%;
   display: block;
-  margin: 0 auto;        /* Center image */
-  object-fit: cover;     /* No distortion */
-  border-radius: 12px;
-  background: rgba(255,255,255,0.4);
-  transition: opacity .5s ease;
+  margin: 0 auto;
+  object-fit: cover;   /* Cropped nicely on desktop */
+  border-radius: 14px;
+  transition: opacity .6s ease, transform 8s ease;
   opacity: 1;
 }
-.hero-img.is-fading { opacity: 0; }
+
+/* Slow cinematic zoom on desktop */
+.hero-img:hover{
+  transform: scale(1.03);
+}
+
+.hero-img.is-fading { 
+  opacity: 0; 
+}
 
     .photo-controls{
       display: flex;
@@ -450,14 +457,13 @@
         padding: 8px;            /* tighter chrome */
         border-radius: 14px;
       }
-      /* Mobile Responsive Image */
-.hero-img{
+      .hero-img{
   width: 100%;
-  height: auto;
-  aspect-ratio: 4 / 3;   /* Keeps image proportional */
-  max-height: 80vh;
-  object-fit: cover;
-  border-radius: 10px;
+  height: auto;        /* Auto height */
+  max-height: none;    /* Remove crop */
+  object-fit: contain; /* IMPORTANT: shows full image */
+  border-radius: 0;    /* Full edge-to-edge look */
+  background: #000;    /* Clean letterbox effect */
 }
 
       /* Make buttons smaller */
