@@ -396,10 +396,11 @@
       border-radius: 18px;
       box-shadow: 0 12px 26px rgba(0,0,0,0.10);
       padding: 12px;
+      padding-bottom: 16px;
     }
 
     /* =============================
-   Hero Image (Exact Desktop Size + Responsive)
+   Hero Image – Cinematic Zoom Out
 ============================== */
 .hero-img{
   width: 700px;
@@ -407,19 +408,21 @@
   max-width: 100%;
   display: block;
   margin: 0 auto;
-  object-fit: cover;   /* Cropped nicely on desktop */
+  object-fit: cover;
   border-radius: 14px;
-  transition: opacity .6s ease, transform 8s ease;
+
   opacity: 1;
+  transform: scale(1);              /* Start normal */
+  transition: transform 3s linear, opacity .6s ease;
 }
 
-/* Slow cinematic zoom on desktop */
-.hero-img:hover{
-  transform: scale(1.03);
+/* Zoom IN */
+.hero-img.zoom-in {
+  transform: scale(1.15);           /* Zoom bigger */
 }
 
-.hero-img.is-fading { 
-  opacity: 0; 
+.hero-img.is-fading {
+  opacity: 0;
 }
 
     .photo-controls{
@@ -443,7 +446,7 @@
     ============================== */
     @media (max-width: 620px){
       /* Use the screen better */
-      .panel{ padding: 10px 7px 7px; margin: 5px; }
+      .panel{ padding: 14px 10px 24px; margin: 6px; }
       .card{ width: 98vw; }
 
       /* Prioritize the photo area */
@@ -469,8 +472,8 @@
       /* Make buttons smaller */
       .photo-controls{ gap: 8px; margin-top: 10px; }
       .btn{
-        font-size: 0.88rem;     /* smaller text */
-        padding: 5px 9px;      /* smaller padding */
+        font-size: 0.84rem;     /* smaller text */
+        padding: 4px 8px;      /* smaller padding */
         box-shadow: 0 8px 14px rgba(0,0,0,0.10);
       }
 
@@ -479,6 +482,13 @@
       ul{ font-size: 1.02rem; }
       .date-row{ gap: 10px; }
     }
+
+    #music-toggle{
+  right: 12px;
+  bottom: 12px;
+  padding: 6px 8px;
+  font-size: 0.75rem;
+}
 
     /* Even smaller phones (≤400px wide) */
     @media (max-width: 400px){
@@ -637,7 +647,6 @@
 
           <div class="photo-controls">
             <button class="btn" id="btnPlayPause" type="button">▶️ Play</button>
-            <button class="btn" id="btnShuffle" type="button">Shuffle</button>
             <a class="btn" href="#location">📍 View Location</a>
           </div>
         </div>
@@ -758,122 +767,141 @@
     // -----------------------
     // Random Photos + Slideshow
     // -----------------------
-    const photoList = [
-      "images/IMG_4017.jpeg",
-      "images/IMG_4008.jpeg",
-      "images/IMG_4029.jpeg",
-      "images/IMG_4011.jpeg",
-      "images/IMG_4009.jpeg",
-      "images/IMG_4028.jpeg",
-      "images/IMG_4022.jpeg",
-      "images/IMG_4020.jpeg"
-    ];
+    const photos = [
+  {
+    src: "images/IMG_4017.jpeg",
+    caption: ""
+  },
+  {
+    src: "images/IMG_4008.jpeg",
+    caption: "Elegance and grace at 50 🌹"
+  },
+  {
+    src: "images/IMG_4029.jpeg",
+    caption: "Golden Smile"
+  },
+  {
+    src: "images/IMG_4011.jpeg",
+    caption: ""
+  },
+  {
+    src: "images/IMG_4009.jpeg",
+    caption: ""
+  },
+  {
+    src: "images/IMG_4028.jpeg",
+    caption: ""
+  },
+  {
+    src: "images/IMG_4022.jpeg",
+    caption: "A candid smile"
+  },
+  {
+    src: "images/IMG_4020.jpeg",
+    caption: "Smiles that light up the day ☀️"
+  }
+];
 
-    const captions = [
-      "Andrea celebrating with family",
-      "Throwback moment",
-      "A candid smile",
-      "With friends",
-      "Birthday highlight"
-    ];
+    const SLIDE_SECONDS = 3;
 
-    const SLIDE_SECONDS = 4;
+let currentIndex = 0;
+let slideshowTimer = null;
 
-    const _preload = [];
-    photoList.forEach(src => { const i = new Image(); i.src = src; _preload.push(i); });
+const imgEl = document.getElementById("randomPhoto");
+const captionEl = document.getElementById("photoCaption");
+const playBtn = document.getElementById("btnPlayPause");
 
-    let _pool = photoList.map((_, i) => i);
-    let _current = -1;
+// Preload images
+photos.forEach(p => {
+  const img = new Image();
+  img.src = p.src;
+});
 
-    let _timer = null;
-    const _img = () => document.getElementById("randomPhoto");
-    const _cap = () => document.getElementById("photoCaption");
-    const _playBtn = () => document.getElementById("btnPlayPause");
+// Fade transition
+function setImage(index) {
+  if (!imgEl) return;
 
-    function pickIndexNoRepeat() {
-      if (_pool.length === 0) _pool = photoList.map((_, i) => i);
-      const r = Math.floor(Math.random() * _pool.length);
-      return _pool.splice(r, 1)[0];
-    }
+  imgEl.classList.add("is-fading");
 
-    function setImageWithFade(src, altText) {
-      const img = _img();
-      if (!img) return;
+  setTimeout(() => {
+    imgEl.src = photos[index].src;
+    imgEl.alt = photos[index].caption;
+    captionEl.textContent = photos[index].caption || "";
 
-      img.classList.add("is-fading");
-      setTimeout(() => {
-        img.src = src;
-        img.alt = altText;
-        img.classList.remove("is-fading");
-      }, 240);
-    }
+    // Reset state (NO zoom yet)
+    imgEl.classList.remove("zoom-in");
+    imgEl.classList.remove("is-fading");
 
-    function showPhotoByIndex(i) {
-      const img = _img();
-      const cap = _cap();
-      if (!img) return;
+  }, 400);
+}
 
-      const src = photoList[i] || "";
-      const text = captions[i] ? captions[i] : `Photo ${i + 1} of ${photoList.length}`;
 
-      setImageWithFade(src, captions[i] || `Andrea photo ${i + 1}`);
+function nextPhoto() {
+  currentIndex = (currentIndex + 1) % photos.length;
+  setImage(currentIndex);
+}
 
-      if (cap) cap.textContent = text;
-      _current = i;
-    }
 
-    function showRandomPhoto() {
-      const i = pickIndexNoRepeat();
-      showPhotoByIndex(i);
-    }
+function startSlideshow() {
+  if (slideshowTimer) return;
 
-    function isPlaying() { return _timer !== null; }
+  // Start zoom immediately
+  imgEl.classList.remove("zoom-in");
+void imgEl.offsetWidth;
+imgEl.classList.add("zoom-in");
 
-    function startSlideshow() {
-      if (isPlaying()) return;
-      showRandomPhoto();
-      _timer = setInterval(showRandomPhoto, SLIDE_SECONDS * 1000);
-      updatePlayBtn();
-    }
+  slideshowTimer = setInterval(() => {
+    nextPhoto();
 
-    function pauseSlideshow() {
-      if (_timer) {
-        clearInterval(_timer);
-        _timer = null;
-        updatePlayBtn();
-      }
-    }
+    setTimeout(() => {
+      imgEl.classList.remove("zoom-in");
+void imgEl.offsetWidth;
+imgEl.classList.add("zoom-in");
+    }, 50);
 
-    function updatePlayBtn() {
-      const btn = _playBtn();
-      if (!btn) return;
-      btn.textContent = isPlaying() ? "⏸ Pause" : "▶️ Play";
-    }
+  }, 3000); // EXACT 3 seconds
 
-    document.getElementById("btnShuffle")?.addEventListener("click", () => {
-      if (!isPlaying()) startSlideshow();
-      else showRandomPhoto();
-    });
+  updatePlayButton();
+}
 
-    _playBtn()?.addEventListener("click", () => {
-      if (isPlaying()) pauseSlideshow();
-      else startSlideshow();
-    });
 
-    window.addEventListener("hashchange", () => {
-      if (location.hash === "#photos") {
-        if (_current === -1) showRandomPhoto();
-      } else {
-        pauseSlideshow();
-      }
-    });
 
-    window.addEventListener("load", () => {
-      updatePlayBtn();
-      if (location.hash === "#photos") {
-        if (_current === -1) showRandomPhoto();
-      }
-    });
+function pauseSlideshow() {
+  clearInterval(slideshowTimer);
+  slideshowTimer = null;
+  updatePlayButton();
+}
+
+function updatePlayButton() {
+  if (!playBtn) return;
+  playBtn.textContent = slideshowTimer ? "⏸ Pause" : "▶️ Play";
+}
+
+// Play / Pause button
+playBtn?.addEventListener("click", () => {
+  if (slideshowTimer) pauseSlideshow();
+  else startSlideshow();
+});
+
+// Remove Shuffle behavior (disable button)
+document.getElementById("btnShuffle")?.addEventListener("click", () => {
+  nextPhoto(); // Just go to next photo instead
+});
+
+// Load first photo when entering Photos page
+window.addEventListener("hashchange", () => {
+  if (location.hash === "#photos") {
+    setImage(currentIndex);
+  } else {
+    pauseSlideshow();
+  }
+});
+
+window.addEventListener("load", () => {
+  if (location.hash === "#photos") {
+    setImage(currentIndex);
+  }
+});
   </script>
 </body>
 </html>
