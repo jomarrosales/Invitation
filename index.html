@@ -416,6 +416,32 @@
 }
 
 
+/* =============================
+   Photo Pagination Dots
+============================= */
+.photo-dots{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.photo-dots span{
+  width: 8px;
+  height: 8px;
+  background: rgba(139, 90, 90, 0.35);
+  border-radius: 50%;
+  transition: all 0.35s ease;
+  cursor: pointer;
+}
+
+.photo-dots span.active{
+  background: var(--accent);
+  transform: scale(1.6);
+}
+
+
 
     .photo-controls{
       display: flex;
@@ -636,7 +662,7 @@
           />
 
           <div class="photo-caption" id="photoCaption">Tap “Play” or “Shuffle” to begin.</div>
-
+          <div class="photo-dots" id="photoDots"></div>
           <div class="photo-controls">
             <button class="btn" id="btnPlayPause" type="button">▶️ Play</button>
             <a class="btn" href="#location">📍 View Location</a>
@@ -678,132 +704,99 @@
     </div>
   </div>
 
-  <script>
-    // -----------------------
-    // Single-page navigation
-    // -----------------------
-    function showPageFromHash() {
-      const allowed = new Set(["#welcome", "#invitation", "#program", "#location", "#photos"]);
-      const hash = allowed.has(location.hash) ? location.hash : "#welcome";
+<script>
+/* =========================================
+   SINGLE PAGE NAVIGATION
+========================================= */
+const allowedPages = new Set([
+  "#welcome",
+  "#invitation",
+  "#program",
+  "#photos",
+  "#location"
+]);
 
-      document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-      document.querySelector(hash).classList.add("active");
-    }
-    window.addEventListener("hashchange", showPageFromHash);
-    window.addEventListener("load", showPageFromHash);
+function showPageFromHash() {
+  const hash = allowedPages.has(location.hash)
+    ? location.hash
+    : "#welcome";
 
-    // -----------------------
-    // Music controls
-    // -----------------------
-    const audio = document.getElementById("bg-music");
-    const openBtn = document.getElementById("openInvitation");
-    const exitBtn = document.getElementById("exitBtn");
-    const toggleBtn = document.getElementById("music-toggle");
-    const KEY = "bgMusicPlaying";
+  document.querySelectorAll(".page")
+    .forEach(p => p.classList.remove("active"));
 
-    function updateMusicBtn() {
-      toggleBtn.textContent = audio.paused ? "🔊 Play Music" : "🔇 Pause Music";
-    }
+  document.querySelector(hash)?.classList.add("active");
 
-    // Start music AFTER click (unmuted) then go to invitation section
-    openBtn.addEventListener("click", async () => {
-      localStorage.setItem(KEY, "true");
+  // Stop slideshow if leaving photos
+  if (hash !== "#photos") pauseSlideshow();
+}
 
-      try {
-        audio.muted = false;
-        audio.volume = 0.5;  // optional
-        await audio.play();
-      } catch (e) {
-        console.log("Audio play blocked:", e);
-      }
+window.addEventListener("hashchange", showPageFromHash);
 
-      updateMusicBtn();
-      location.hash = "#invitation";
-    });
 
-    // exit music AFTER click (exit) then go to welcome section
-    exitBtn.addEventListener("click", () => {
-  localStorage.setItem(KEY, "false"); // save preference
-  if (!audio.paused) {
-    audio.pause();       // stop music
-    audio.currentTime = 0; // optional: reset to start
-  }
+/* =========================================
+   MUSIC CONTROLS
+========================================= */
+const audio = document.getElementById("bg-music");
+const openBtn = document.getElementById("openInvitation");
+const exitBtn = document.getElementById("exitBtn");
+const toggleBtn = document.getElementById("music-toggle");
+const MUSIC_KEY = "bgMusicPlaying";
+
+function updateMusicBtn() {
+  toggleBtn.textContent = audio.paused
+    ? "🔊 Play Music"
+    : "🔇 Pause Music";
+}
+
+openBtn.addEventListener("click", async () => {
+  localStorage.setItem(MUSIC_KEY, "true");
+
+  try {
+    audio.muted = false;
+    audio.volume = 0.5;
+    await audio.play();
+  } catch (e) {}
+
+  updateMusicBtn();
+  location.hash = "#invitation";
 });
 
-    // Toggle button play/pause
-    toggleBtn.addEventListener("click", async () => {
-      try {
-        if (audio.paused) {
-          audio.muted = false;
-          await audio.play();
-          localStorage.setItem(KEY, "true");
-        } else {
-          audio.pause();
-          localStorage.setItem(KEY, "false");
-        }
-      } catch (e) {
-        console.log("Audio toggle blocked:", e);
-      }
-      updateMusicBtn();
-    });
+exitBtn.addEventListener("click", () => {
+  localStorage.setItem(MUSIC_KEY, "false");
+  audio.pause();
+  audio.currentTime = 0;
+});
 
-    // Restore music preference (if user enabled before)
-    window.addEventListener("load", async () => {
-      updateMusicBtn();
+toggleBtn.addEventListener("click", async () => {
+  try {
+    if (audio.paused) {
+      await audio.play();
+      localStorage.setItem(MUSIC_KEY, "true");
+    } else {
+      audio.pause();
+      localStorage.setItem(MUSIC_KEY, "false");
+    }
+  } catch (e) {}
 
-      const shouldPlay = localStorage.getItem(KEY) === "true";
-      if (!shouldPlay) return;
+  updateMusicBtn();
+});
 
-      try {
-        audio.muted = false;
-        audio.volume = 0.5;
-        await audio.play();
-      } catch (e) {
-        // Some browsers still require a tap; the toggle button will work.
-      }
 
-      updateMusicBtn();
-    });
-
-    // -----------------------
-    // Random Photos + Slideshow
-    // -----------------------
-    const photos = [
-  {
-    src: "images/IMG_4017.jpeg",
-    caption: ""
-  },
-  {
-    src: "images/IMG_4008.jpeg",
-    caption: "Elegance and grace at 50 🌹"
-  },
-  {
-    src: "images/IMG_4029.jpeg",
-    caption: "Golden Smile"
-  },
-  {
-    src: "images/IMG_4011.jpeg",
-    caption: ""
-  },
-  {
-    src: "images/IMG_4009.jpeg",
-    caption: ""
-  },
-  {
-    src: "images/IMG_4028.jpeg",
-    caption: ""
-  },
-  {
-    src: "images/IMG_4022.jpeg",
-    caption: "A candid smile"
-  },
-  {
-    src: "images/IMG_4020.jpeg",
-    caption: "Smiles that light up the day ☀️"
-  }
+/* =========================================
+   PHOTO SLIDESHOW
+========================================= */
+const photos = [
+  { src: "images/IMG_4017.jpeg", caption: "" },
+  { src: "images/IMG_4008.jpeg", caption: "Elegance and grace at 50 🌹" },
+  { src: "images/IMG_4029.jpeg", caption: "Golden Smile" },
+  { src: "images/IMG_4011.jpeg", caption: "" },
+  { src: "images/IMG_4009.jpeg", caption: "" },
+  { src: "images/IMG_4028.jpeg", caption: "" },
+  { src: "images/IMG_4022.jpeg", caption: "A candid smile" },
+  { src: "images/IMG_4020.jpeg", caption: "Smiles that light up the day ☀️" }
 ];
 
-    const SLIDE_SECONDS = 3;
+const SLIDE_SECONDS = 3;
 
 let currentIndex = 0;
 let slideshowTimer = null;
@@ -811,6 +804,7 @@ let slideshowTimer = null;
 const imgEl = document.getElementById("randomPhoto");
 const captionEl = document.getElementById("photoCaption");
 const playBtn = document.getElementById("btnPlayPause");
+const dotsContainer = document.getElementById("photoDots");
 
 // Preload images
 photos.forEach(p => {
@@ -818,10 +812,25 @@ photos.forEach(p => {
   img.src = p.src;
 });
 
-// Fade transition
-function setImage(index) {
-  if (!imgEl) return;
+// Create dots
+function createDots() {
+  dotsContainer.innerHTML = "";
 
+  photos.forEach((_, index) => {
+    const dot = document.createElement("span");
+
+    dot.addEventListener("click", () => {
+      currentIndex = index;
+      setImage(currentIndex);
+      pauseSlideshow();
+    });
+
+    dotsContainer.appendChild(dot);
+  });
+}
+
+// Set image with fade
+function setImage(index) {
   imgEl.classList.add("is-fading");
 
   setTimeout(() => {
@@ -829,28 +838,30 @@ function setImage(index) {
     imgEl.alt = photos[index].caption;
     captionEl.textContent = photos[index].caption || "";
 
+    document.querySelectorAll(".photo-dots span")
+      .forEach((dot, i) =>
+        dot.classList.toggle("active", i === index)
+      );
+
     imgEl.classList.remove("is-fading");
   }, 400);
 }
-
 
 function nextPhoto() {
   currentIndex = (currentIndex + 1) % photos.length;
   setImage(currentIndex);
 }
 
-
 function startSlideshow() {
   if (slideshowTimer) return;
 
-  slideshowTimer = setInterval(() => {
-    nextPhoto();
-  }, 3000);   // 3 seconds
+  slideshowTimer = setInterval(
+    nextPhoto,
+    SLIDE_SECONDS * 1000
+  );
 
   updatePlayButton();
 }
-
-
 
 function pauseSlideshow() {
   clearInterval(slideshowTimer);
@@ -859,35 +870,40 @@ function pauseSlideshow() {
 }
 
 function updatePlayButton() {
-  if (!playBtn) return;
-  playBtn.textContent = slideshowTimer ? "⏸ Pause" : "▶️ Play";
+  playBtn.textContent = slideshowTimer
+    ? "⏸ Pause"
+    : "▶️ Play";
 }
 
-// Play / Pause button
-playBtn?.addEventListener("click", () => {
-  if (slideshowTimer) pauseSlideshow();
-  else startSlideshow();
+playBtn.addEventListener("click", () => {
+  slideshowTimer
+    ? pauseSlideshow()
+    : startSlideshow();
 });
 
-// Remove Shuffle behavior (disable button)
-document.getElementById("btnShuffle")?.addEventListener("click", () => {
-  nextPhoto(); // Just go to next photo instead
-});
 
-// Load first photo when entering Photos page
-window.addEventListener("hashchange", () => {
-  if (location.hash === "#photos") {
-    setImage(currentIndex);
-  } else {
-    pauseSlideshow();
+/* =========================================
+   INITIALIZATION
+========================================= */
+window.addEventListener("load", async () => {
+
+  // Page routing
+  showPageFromHash();
+
+  // Create slideshow dots
+  createDots();
+  setImage(currentIndex);
+
+  // Restore music preference
+  if (localStorage.getItem(MUSIC_KEY) === "true") {
+    try {
+      audio.volume = 0.5;
+      await audio.play();
+    } catch (e) {}
   }
-});
 
-window.addEventListener("load", () => {
-  if (location.hash === "#photos") {
-    setImage(currentIndex);
-  }
+  updateMusicBtn();
 });
-  </script>
+</script>
 </body>
 </html>
