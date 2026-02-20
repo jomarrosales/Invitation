@@ -412,18 +412,10 @@
   border-radius: 14px;
 
   opacity: 1;
-  transform: scale(1);              /* Start normal */
-  transition: transform 3s linear, opacity .6s ease;
+  transition: opacity .6s ease; /* Fade only */
 }
 
-/* Zoom IN */
-.hero-img.zoom-in {
-  transform: scale(1.15);           /* Zoom bigger */
-}
 
-.hero-img.is-fading {
-  opacity: 0;
-}
 
     .photo-controls{
       display: flex;
@@ -679,7 +671,7 @@
              href="https://waze.com/ul?ll=14.058473,121.301432&navigate=yes">
             Open in Waze
           </a>
-          <a class="btn secondary" href="#welcome">← Exit</a>
+          <a class="btn secondary" href="#welcome" id="exitBtn">← Exit</a>
         </div>
       </section>
 
@@ -705,7 +697,7 @@
     // -----------------------
     const audio = document.getElementById("bg-music");
     const openBtn = document.getElementById("openInvitation");
-    const exitBtn = document.getElementById("offmusic");
+    const exitBtn = document.getElementById("exitBtn");
     const toggleBtn = document.getElementById("music-toggle");
     const KEY = "bgMusicPlaying";
 
@@ -728,6 +720,15 @@
       updateMusicBtn();
       location.hash = "#invitation";
     });
+
+    // exit music AFTER click (exit) then go to welcome section
+    exitBtn.addEventListener("click", () => {
+  localStorage.setItem(KEY, "false"); // save preference
+  if (!audio.paused) {
+    audio.pause();       // stop music
+    audio.currentTime = 0; // optional: reset to start
+  }
+});
 
     // Toggle button play/pause
     toggleBtn.addEventListener("click", async () => {
@@ -828,10 +829,7 @@ function setImage(index) {
     imgEl.alt = photos[index].caption;
     captionEl.textContent = photos[index].caption || "";
 
-    // Reset state (NO zoom yet)
-    imgEl.classList.remove("zoom-in");
     imgEl.classList.remove("is-fading");
-
   }, 400);
 }
 
@@ -845,21 +843,9 @@ function nextPhoto() {
 function startSlideshow() {
   if (slideshowTimer) return;
 
-  // Start zoom immediately
-  imgEl.classList.remove("zoom-in");
-void imgEl.offsetWidth;
-imgEl.classList.add("zoom-in");
-
   slideshowTimer = setInterval(() => {
     nextPhoto();
-
-    setTimeout(() => {
-      imgEl.classList.remove("zoom-in");
-void imgEl.offsetWidth;
-imgEl.classList.add("zoom-in");
-    }, 50);
-
-  }, 3000); // EXACT 3 seconds
+  }, 3000);   // 3 seconds
 
   updatePlayButton();
 }
